@@ -136,7 +136,7 @@ function isChef(dati: unknown): dati is Chef {
     }
 }
 
-async function getChefBirthday(id: number): Promise<any> {
+async function getChefBirthday(id: number): Promise<string | null> {
     let userId: number;
     try {
         const response = await fetch(`https://dummyjson.com/recipes/${id}`);
@@ -161,8 +161,11 @@ async function getChefBirthday(id: number): Promise<any> {
         if (!response.ok) {
             throw new Error(`Errore HTTP ${response.status}: ${response.statusText}`)
         };
-        const data = await response.json();
-        return data
+        const data: unknown = await response.json();
+        if (!isChef(data)) {
+            throw new Error("Formato dei dati non valido")
+        }
+        return data.birthDate
     } catch (error) {
         if (error instanceof Error) {
             console.error(error.message)
