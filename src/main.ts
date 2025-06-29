@@ -39,6 +39,32 @@ type Recipe = {
     userId: number
 }
 
+function isRecipe(dati: unknown): dati is Recipe {
+    if (
+        dati && typeof dati === "object" && dati !== null &&
+        "caloriesPerServing" in dati && typeof dati.caloriesPerServing === "number" &&
+        "cookTimeMinutes" in dati && typeof dati.cookTimeMinutes === "number" &&
+        "cuisine" in dati && typeof dati.cuisine === "string" &&
+        "difficulty" in dati && typeof dati.difficulty === "string" &&
+        "id" in dati && typeof dati.id === "number" &&
+        "image" in dati && typeof dati.image === "string" &&
+        "ingredients" in dati && dati.ingredients instanceof Array && dati.ingredients.every(i => typeof i === "string") &&
+        "instructions" in dati && dati.instructions instanceof Array && dati.instructions.every(i => typeof i === "string") &&
+        "mealType" in dati && dati.mealType instanceof Array && dati.mealType.every(m => typeof m === "string") &&
+        "name" in dati && typeof dati.name === "string" &&
+        "prepTimeMinutes" in dati && typeof dati.prepTimeMinutes === "number" &&
+        "rating" in dati && typeof dati.rating === "number" &&
+        "reviewCount" in dati && typeof dati.reviewCount === "number" &&
+        "servings" in dati && typeof dati.servings === "number" &&
+        "tags" in dati && dati.tags instanceof Array && dati.tags.every(t => typeof t === "string") &&
+        "userId" in dati && typeof dati.userId === "number"
+    ) {
+        return true
+    } else {
+        return false
+    }
+}
+
 async function getChefBirthday(id: number): Promise<any> {
     let recipe: any;
     try {
