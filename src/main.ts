@@ -65,16 +65,32 @@ function isRecipe(dati: unknown): dati is Recipe {
     }
 }
 
-async function getChefBirthday(id: number): Promise<Recipe | null> {
+async function getChefBirthday(id: number): Promise<any> {
+    let userId: number;
     try {
         const response = await fetch(`https://dummyjson.com/recipes/${id}`);
         if (!response.ok) {
             throw new Error(`Errore HTTP ${response.status}: ${response.statusText}`)
-        }
+        };
         const data: unknown = await response.json();
         if (!isRecipe(data)) {
             throw new Error("Formato dati non valido")
         }
+        userId = data.userId;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message)
+        } else {
+            console.error("Errore sconosciuto:", error)
+        }
+        return null
+    }
+    try {
+        const response = await fetch(`https://dummyjson.com/users/${userId}`);
+        if (!response.ok) {
+            throw new Error(`Errore HTTP ${response.status}: ${response.statusText}`)
+        };
+        const data = await response.json();
         return data
     } catch (error) {
         if (error instanceof Error) {
